@@ -1,0 +1,668 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#071b1b">
+  <meta name="description" content="KILVIXY — explore the island, survive the wild, and find a way out.">
+  <title>KILVIXY — The Island Awaits</title>
+
+  <style>
+    :root {
+      color-scheme: dark;
+      --bg: #071514;
+      --panel: #0d2422;
+      --panel-2: #112d29;
+      --text: #f2f8f5;
+      --muted: #a9c0b9;
+      --line: rgba(206, 239, 222, .14);
+      --mint: #9cf4c8;
+      --mint-dark: #1c654c;
+      --sand: #f2d8a5;
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    html {
+      scroll-behavior: smooth;
+    }
+
+    body {
+      margin: 0;
+      background: var(--bg);
+      color: var(--text);
+      font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      line-height: 1.6;
+    }
+
+    a {
+      color: inherit;
+    }
+
+    .wrap {
+      width: min(1120px, calc(100% - 40px));
+      margin: 0 auto;
+    }
+
+    header {
+      position: relative;
+      z-index: 1;
+      border-bottom: 1px solid var(--line);
+      background: rgba(7, 21, 20, .88);
+    }
+
+    .nav {
+      min-height: 76px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 24px;
+    }
+
+    .brand {
+      text-decoration: none;
+      font-size: 1.18rem;
+      font-weight: 900;
+      letter-spacing: .2em;
+    }
+
+    .brand span {
+      color: var(--mint);
+    }
+
+    .navlinks {
+      display: flex;
+      align-items: center;
+      gap: 24px;
+    }
+
+    .navlinks a {
+      color: var(--muted);
+      font-size: .9rem;
+      text-decoration: none;
+    }
+
+    .navlinks a:hover,
+    .navlinks a:focus-visible {
+      color: var(--mint);
+    }
+
+    .hero {
+      position: relative;
+      overflow: hidden;
+      padding: clamp(76px, 12vw, 142px) 0 94px;
+      background:
+        radial-gradient(ellipse at 78% 20%, rgba(48, 131, 98, .22), transparent 32%),
+        radial-gradient(ellipse at 18% 80%, rgba(20, 89, 74, .26), transparent 40%),
+        linear-gradient(180deg, #091d1b 0%, #0a211e 65%, #071514 100%);
+    }
+
+    .hero:before,
+    .hero:after {
+      content: "";
+      position: absolute;
+      pointer-events: none;
+    }
+
+    .hero:before {
+      width: 480px;
+      height: 480px;
+      right: -80px;
+      bottom: -245px;
+      border-radius: 50%;
+      border: 1px solid rgba(156,244,200,.13);
+      box-shadow:
+        0 0 0 42px rgba(156,244,200,.025),
+        0 0 0 84px rgba(156,244,200,.025);
+    }
+
+    .hero:after {
+      width: 220px;
+      height: 220px;
+      right: 13%;
+      top: 12%;
+      border-radius: 50%;
+      background: radial-gradient(circle, rgba(156,244,200,.09), transparent 68%);
+    }
+
+    .eyebrow {
+      color: var(--mint);
+      text-transform: uppercase;
+      letter-spacing: .22em;
+      font-size: .76rem;
+      font-weight: 800;
+    }
+
+    h1 {
+      max-width: 850px;
+      margin: 18px 0 20px;
+      font-size: clamp(3rem, 8.5vw, 6.8rem);
+      line-height: .98;
+      letter-spacing: -.065em;
+    }
+
+    h1 .accent {
+      color: var(--mint);
+    }
+
+    .hero p {
+      max-width: 610px;
+      margin: 0;
+      color: #bed2ca;
+      font-size: clamp(1rem, 2vw, 1.2rem);
+    }
+
+    .actions {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 12px;
+      margin-top: 32px;
+    }
+
+    .button {
+      display: inline-flex;
+      min-height: 48px;
+      justify-content: center;
+      align-items: center;
+      padding: 12px 20px;
+      border-radius: 7px;
+      text-decoration: none;
+      font-weight: 800;
+      font-size: .92rem;
+      transition: transform .2s ease, background .2s ease;
+    }
+
+    .button:hover {
+      transform: translateY(-2px);
+    }
+
+    .button.primary {
+      color: #062018;
+      background: var(--mint);
+    }
+
+    .button.primary:hover {
+      background: #c0ffdc;
+    }
+
+    .button.secondary {
+      border: 1px solid rgba(220,245,233,.22);
+      color: var(--text);
+      background: rgba(255,255,255,.025);
+    }
+
+    section {
+      padding: 82px 0;
+    }
+
+    .sectionhead {
+      display: flex;
+      align-items: end;
+      justify-content: space-between;
+      gap: 24px;
+      margin-bottom: 30px;
+    }
+
+    h2 {
+      margin: 8px 0 0;
+      font-size: clamp(2rem, 5vw, 3.3rem);
+      line-height: 1.08;
+      letter-spacing: -.045em;
+    }
+
+    .sectionhead p {
+      max-width: 410px;
+      color: var(--muted);
+      margin: 0;
+    }
+
+    .cards {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 17px;
+    }
+
+    .card {
+      min-height: 270px;
+      display: flex;
+      flex-direction: column;
+      padding: 26px;
+      border: 1px solid var(--line);
+      border-radius: 14px;
+      background: linear-gradient(145deg, rgba(20,49,43,.95), rgba(9,29,27,.98));
+    }
+
+    .card .icon {
+      width: 52px;
+      height: 52px;
+      display: grid;
+      place-items: center;
+      border: 1px solid rgba(156,244,200,.22);
+      border-radius: 12px;
+      background: rgba(156,244,200,.07);
+      font-size: 1.55rem;
+    }
+
+    .card h3 {
+      margin: 21px 0 8px;
+      font-size: 1.35rem;
+    }
+
+    .card p {
+      margin: 0 0 22px;
+      color: var(--muted);
+      font-size: .95rem;
+    }
+
+    .card a {
+      margin-top: auto;
+      color: var(--mint);
+      font-size: .9rem;
+      font-weight: 800;
+      text-decoration: none;
+    }
+
+    .card a:hover {
+      text-decoration: underline;
+    }
+
+    .escape {
+      padding-top: 20px;
+    }
+
+    .escape-box {
+      display: grid;
+      grid-template-columns: 1.15fr .85fr;
+      overflow: hidden;
+      border: 1px solid rgba(156,244,200,.2);
+      border-radius: 18px;
+      background: #0d2622;
+    }
+
+    .escape-copy {
+      padding: clamp(28px, 6vw, 58px);
+    }
+
+    .escape-copy h2 {
+      max-width: 530px;
+    }
+
+    .escape-copy p {
+      max-width: 580px;
+      color: var(--muted);
+    }
+
+    .escape-copy ul {
+      display: grid;
+      gap: 10px;
+      margin: 25px 0 30px;
+      padding: 0;
+      list-style: none;
+      color: #d4e5dc;
+    }
+
+    .escape-copy li:before {
+      content: "✓";
+      color: var(--mint);
+      font-weight: 900;
+      margin-right: 10px;
+    }
+
+    .visual {
+      position: relative;
+      min-height: 360px;
+      overflow: hidden;
+      background: linear-gradient(
+        180deg,
+        #153f37 0%,
+        #164a41 45%,
+        #193a32 46%,
+        #0d2723 100%
+      );
+    }
+
+    .sun {
+      position: absolute;
+      top: 50px;
+      right: 55px;
+      width: 92px;
+      aspect-ratio: 1;
+      border-radius: 50%;
+      background: var(--sand);
+      box-shadow: 0 0 70px rgba(242,216,165,.2);
+    }
+
+    .mountain {
+      position: absolute;
+      bottom: 24%;
+      width: 0;
+      height: 0;
+      border-left: 170px solid transparent;
+      border-right: 170px solid transparent;
+      border-bottom: 230px solid #173c33;
+    }
+
+    .mountain.one {
+      left: -66px;
+    }
+
+    .mountain.two {
+      left: 125px;
+      bottom: 20%;
+      border-left-width: 210px;
+      border-right-width: 210px;
+      border-bottom-width: 285px;
+      border-bottom-color: #0e2b27;
+    }
+
+    .shore {
+      position: absolute;
+      left: -10%;
+      right: -10%;
+      height: 42%;
+      bottom: -15%;
+      transform: rotate(-7deg);
+      border-radius: 50% 50% 0 0;
+      background: linear-gradient(180deg, #8cbca2, #426e5b);
+    }
+
+    .shore:after {
+      content: "";
+      position: absolute;
+      left: -5%;
+      right: -5%;
+      top: 18px;
+      height: 22px;
+      border-radius: 50%;
+      background: rgba(232,219,171,.6);
+    }
+
+    .visual-label {
+      position: absolute;
+      left: 24px;
+      bottom: 24px;
+      padding: 8px 12px;
+      background: rgba(5,20,18,.7);
+      border: 1px solid rgba(255,255,255,.18);
+      border-radius: 6px;
+      font-size: .75rem;
+      letter-spacing: .12em;
+      text-transform: uppercase;
+    }
+
+    .bottom-cta {
+      margin-top: 30px;
+      padding: 28px;
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      justify-content: space-between;
+      gap: 18px;
+      border: 1px solid var(--line);
+      border-radius: 12px;
+      background: rgba(255,255,255,.025);
+    }
+
+    .bottom-cta strong {
+      display: block;
+      font-size: 1.15rem;
+    }
+
+    .bottom-cta span {
+      color: var(--muted);
+      font-size: .9rem;
+    }
+
+    footer {
+      border-top: 1px solid var(--line);
+      padding: 26px 0 34px;
+      color: #91aaa1;
+      font-size: .84rem;
+    }
+
+    .footrow {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+    }
+
+    .footbrand {
+      color: var(--text);
+      font-weight: 900;
+      letter-spacing: .18em;
+    }
+
+    @media (max-width: 760px) {
+      .wrap {
+        width: min(100% - 32px, 560px);
+      }
+
+      .nav {
+        min-height: 68px;
+      }
+
+      .navlinks {
+        gap: 14px;
+      }
+
+      .navlinks a {
+        font-size: .82rem;
+      }
+
+      .sectionhead {
+        display: block;
+      }
+
+      .sectionhead p {
+        margin-top: 14px;
+      }
+
+      .cards {
+        grid-template-columns: 1fr;
+      }
+
+      .card {
+        min-height: 220px;
+      }
+
+      .escape-box {
+        grid-template-columns: 1fr;
+      }
+
+      .visual {
+        min-height: 280px;
+        order: -1;
+      }
+
+      .bottom-cta {
+        align-items: flex-start;
+      }
+    }
+
+    @media (max-width: 420px) {
+      .navlinks a:first-child {
+        display: none;
+      }
+
+      h1 {
+        font-size: clamp(2.8rem, 15vw, 4rem);
+      }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      html {
+        scroll-behavior: auto;
+      }
+
+      *,
+      *:before,
+      *:after {
+        transition: none !important;
+      }
+    }
+  </style>
+</head>
+
+<body>
+  <header>
+    <div class="wrap nav">
+      <a class="brand" href="#top" aria-label="KILVIXY home">KIL<span>VIXY</span></a>
+
+      <nav class="navlinks" aria-label="Main navigation">
+        <a href="#adventure">The Adventure</a>
+        <a href="#survive">Survive or Escape</a>
+      </nav>
+    </div>
+  </header>
+
+  <main id="top">
+    <section class="hero" aria-labelledby="hero-title">
+      <div class="wrap">
+        <div class="eyebrow">A wild island adventure</div>
+
+        <h1 id="hero-title">
+          THE ISLAND<br>
+          <span class="accent">AWAITS.</span>
+        </h1>
+
+        <p>
+          Stranded on a distant island, every choice matters.
+          Explore the wild, collect what you need, and find your
+          way to freedom.
+        </p>
+
+        <div class="actions">
+          <a class="button primary" href="#adventure">
+            START EXPLORING <span aria-hidden="true">&nbsp;↗</span>
+          </a>
+
+          <a class="button secondary" href="#survive">
+            SURVIVE OR ESCAPE
+          </a>
+        </div>
+      </div>
+    </section>
+
+    <section id="adventure">
+      <div class="wrap">
+        <div class="sectionhead">
+          <div>
+            <div class="eyebrow">Your journey begins</div>
+            <h2>Make the island<br>your challenge.</h2>
+          </div>
+
+          <p>
+            No old legends to uncover. Just you, the wilderness,
+            and the decisions that shape your escape.
+          </p>
+        </div>
+
+        <div class="cards">
+          <article class="card">
+            <div class="icon" aria-hidden="true">🌴</div>
+            <h3>Explore</h3>
+            <p>
+              Travel across sandy beaches, thick forests, hidden
+              paths, and rugged coastlines. Keep your eyes open
+              for useful supplies.
+            </p>
+            <a href="#survive">
+              Explore the island <span aria-hidden="true">→</span>
+            </a>
+          </article>
+
+          <article class="card">
+            <div class="icon" aria-hidden="true">🧭</div>
+            <h3>Survive</h3>
+            <p>
+              Search for tools, manage your supplies, and use
+              your surroundings to get through each new challenge.
+            </p>
+            <a href="#survive">
+              Prepare to survive <span aria-hidden="true">→</span>
+            </a>
+          </article>
+
+          <article class="card">
+            <div class="icon" aria-hidden="true">🛶</div>
+            <h3>Find a Way Out</h3>
+            <p>
+              Look for a route beyond the shoreline. Gather what
+              you need and decide how you will make your escape.
+            </p>
+            <a href="#survive">
+              Plan your escape <span aria-hidden="true">→</span>
+            </a>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <section class="escape" id="survive">
+      <div class="wrap">
+        <div class="escape-box">
+          <div class="escape-copy">
+            <div class="eyebrow">Your goal is simple</div>
+
+            <h2>Survive <span class="accent">or escape.</span></h2>
+
+            <p>
+              Every day on the island brings a new challenge.
+              Explore carefully, collect useful items, and make
+              a plan. Will you build what you need to survive—or
+              risk everything to get off the island?
+            </p>
+
+            <ul>
+              <li>Find supplies and practical tools</li>
+              <li>Navigate forests, beaches, and rough terrain</li>
+              <li>Choose your route and work toward escape</li>
+            </ul>
+
+            <a class="button primary" href="#top">
+              BACK TO THE TOP ↑
+            </a>
+          </div>
+
+          <div
+            class="visual"
+            role="img"
+            aria-label="Illustrated island coastline with green mountains, a warm sun, and a sandy shore"
+          >
+            <div class="sun"></div>
+            <div class="mountain one"></div>
+            <div class="mountain two"></div>
+            <div class="shore"></div>
+            <div class="visual-label">Can you make it out?</div>
+          </div>
+        </div>
+
+        <div class="bottom-cta">
+          <div>
+            <strong>KILVIXY — THE ISLAND AWAITS.</strong>
+            <span>An island adventure is in development.</span>
+          </div>
+
+          <a class="button secondary" href="#survive">
+            COMING SOON
+          </a>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer>
+    <div class="wrap footrow">
+      <div class="footbrand">KILVIXY</div>
+      <div>© 2026 KILVIXY. All rights reserved.</div>
+      <a href="#top" style="text-decoration:none;color:var(--mint)">
+        Back to top ↑
+      </a>
+    </div>
+  </footer>
+</body>
+	</html>
